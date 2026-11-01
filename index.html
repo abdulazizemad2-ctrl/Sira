@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>اختبار السيرة النبوية المحاكي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ورقة اختبار بهوية ملخصات أبو عماد: كحلي + ورق أبيض + ترميز أزرق/أخضر/أحمر */
+  --navy:#0B004F; --paper:#ffffff; --bg:#F3F2F8; --ink:#16142a; --muted:#5d5a75; --line:#d9d7e6;
+  --blue:#1800AD; --green:#00A855; --red:#E02828; --soft:#ECE9F7; --amber:#B7791F;
+  --display:'Tajawal','IBM Plex Sans Arabic',Tahoma,sans-serif; --body:'IBM Plex Sans Arabic',Tahoma,'Segoe UI',sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--navy:#C9C2FF;--paper:#1b1930;--bg:#121022;--ink:#ecebf5;--muted:#a6a3bf;--line:#34314f;--blue:#8fa0ff;--green:#3ddc8e;--red:#ff6b6b;--soft:#26233f;--amber:#f0b24a;color-scheme:dark}}
+:root[data-theme="dark"]{--navy:#C9C2FF;--paper:#1b1930;--bg:#121022;--ink:#ecebf5;--muted:#a6a3bf;--line:#34314f;--blue:#8fa0ff;--green:#3ddc8e;--red:#ff6b6b;--soft:#26233f;--amber:#f0b24a;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.75}
+button,select,input,textarea{font-family:inherit;font-size:inherit}
+.wrap{max-width:820px;margin:0 auto;padding:16px}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 0 10px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand svg{width:34px;height:34px;flex:none}
+.brand b{font-family:var(--display);font-size:20px;color:var(--navy);display:block;line-height:1.2}
+.brand span{font-size:13px;color:var(--muted)}
+.tag{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--muted);background:var(--paper)}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:12px 0}
+.mode{border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:12px;text-align:right;cursor:pointer;color:var(--ink)}
+.mode b{display:block;font-family:var(--display);color:var(--navy);font-size:16px}
+.mode small{color:var(--muted);font-size:13px;line-height:1.5;display:block}
+.mode[aria-pressed="true"]{border-color:var(--navy);box-shadow:inset 0 0 0 1px var(--navy)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+select,input[type=number]{border:1px solid var(--line);border-radius:10px;padding:7px 10px;background:var(--paper);color:var(--ink)}
+.btn{border:0;border-radius:10px;padding:10px 18px;font-weight:700;cursor:pointer;background:var(--navy);color:var(--paper)}
+.btn.ghost{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.btn:focus-visible,.mode:focus-visible,.opt:focus-visible,.tf button:focus-visible,.sg button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+/* paper */
+.sheet{background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:18px 16px;margin-top:14px}
+.sheethead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:2px solid var(--navy);padding-bottom:8px;margin-bottom:8px}
+.sheethead h1{font-family:var(--display);font-size:19px;margin:0;color:var(--navy)}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;color:var(--navy)}
+.timer.low{color:var(--red)}
+h2.qh{font-family:var(--display);font-size:17px;margin:18px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--ink);display:inline-block}
+.item{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.n{font-weight:700;color:var(--muted);min-width:22px}
+.tf{display:flex;gap:8px;margin-top:6px;grid-column:2}
+.tf button{min-width:52px;border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);padding:4px 12px;cursor:pointer;font-weight:700}
+.tf button[aria-pressed="true"]{border-color:var(--navy);background:var(--soft);color:var(--navy)}
+.opts{grid-column:2;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+@media (max-width:520px){.opts{grid-template-columns:1fr}}
+.opt{border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);text-align:right;padding:6px 10px;cursor:pointer;line-height:1.5}
+.opt[aria-pressed="true"]{border-color:var(--navy);background:var(--soft)}
+.opt .l{font-weight:700;margin-left:6px}
+.lst{grid-column:2;display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+@media (max-width:520px){.lst{grid-template-columns:1fr}}
+.lst label{display:flex;gap:6px;align-items:center;font-weight:700}
+.lst input{flex:1;border:0;border-bottom:1.5px dotted var(--muted);background:transparent;color:var(--ink);padding:4px 2px;min-width:0}
+/* results */
+.mark{grid-column:2;font-size:14px;margin-top:6px;padding:7px 10px;border-radius:8px;line-height:1.6}
+.mark.ok{background:color-mix(in srgb,var(--green) 12%,transparent);border-right:3px solid var(--green)}
+.mark.no{background:color-mix(in srgb,var(--red) 10%,transparent);border-right:3px solid var(--red)}
+.mark.part{background:color-mix(in srgb,var(--amber) 14%,transparent);border-right:3px solid var(--amber)}
+.mark b.ok{color:var(--green)} .mark b.no{color:var(--red)}
+.chip{display:inline-block;font-size:11px;border-radius:999px;padding:1px 8px;margin-right:6px;background:var(--soft);color:var(--navy);vertical-align:2px}
+.opt.right{border-color:var(--green)} .opt.wrong{border-color:var(--red)}
+.tf button.right{border-color:var(--green)} .tf button.wrong{border-color:var(--red)}
+.sg{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.sg button{border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:8px;padding:3px 10px;cursor:pointer;font-size:14px}
+.sg button[aria-pressed="true"]{border-color:var(--navy);background:var(--soft);font-weight:700}
+.score{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ring{width:96px;height:96px;border-radius:50%;border:3px solid var(--red);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:30px;color:var(--red);transform:rotate(-6deg);flex:none}
+.bars{flex:1;min-width:220px;display:grid;gap:6px}
+.bar{display:grid;grid-template-columns:1fr auto;font-size:14px}
+.track{grid-column:1/3;height:7px;background:var(--soft);border-radius:4px;overflow:hidden}
+.track i{display:block;height:100%;background:var(--navy)}
+.foot{text-align:center;color:var(--muted);font-size:13px;margin:22px 0 8px}
+.foot a{color:var(--navy)}
+.hide{display:none}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.note{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="5" y="8" width="7" height="24" rx="2" fill="#5f5f6b" transform="rotate(14 8 20)"/><rect x="16" y="7" width="7" height="25" rx="2" fill="#5f5f6b"/><rect x="26" y="7" width="7" height="25" rx="2" fill="#2e4a4c"/><rect x="5" y="34" width="29" height="3" rx="1.5" fill="#5f5f6b"/></svg>
+      <div><b>ملخصات أبو عماد</b><span>اختبار محاكي لمقرر السيرة النبوية</span></div>
+    </div>
+    <span class="tag">من تحنّثه ﷺ في غار حراء إلى بيعة العقبة الثانية</span>
+  </header>
+
+  <section class="panel" id="setup">
+    <div class="note">أسئلة جديدة كُتبت على الملخص المعتمد بنفس صيغ الدكتور وطريقة صنعه للخطأ والمشتتات. الورقة بنفس هيكل ورقته: صح وخطأ (7)، اذكر اثنين (3 أسئلة × درجتين)، اختيار من متعدد (7)، والمجموع 20.</div>
+    <div class="modes" role="group" aria-label="نوع الاختبار">
+      <button class="mode" id="m-model" aria-pressed="true" data-mode="model"><b>نموذج محاكي</b><small>ورقة كاملة من 20 درجة بأسئلة مختلفة كل مرة</small></button>
+      <button class="mode" id="m-topic" aria-pressed="false" data-mode="topic"><b>حسب الموضوع</b><small>كل أسئلة موضوع واحد من الملخص</small></button>
+      <button class="mode" id="m-all" aria-pressed="false" data-mode="all"><b>كل الأسئلة</b><small>بنك الأسئلة كاملاً للمراجعة</small></button>
+    </div>
+    <div class="row">
+      <label for="topic" class="hide" id="topicLbl">الموضوع</label>
+      <select id="topic" class="hide"></select>
+      <label for="mins">المؤقت:</label>
+      <select id="mins"><option value="0">بدون مؤقت</option><option value="30">30 دقيقة</option><option value="45">45 دقيقة</option><option value="60">60 دقيقة</option></select>
+      <button class="btn" id="start">ابدأ الاختبار</button>
+    </div>
+  </section>
+
+  <section id="exam" class="hide"></section>
+  <p class="foot">الأسئلة للتدرّب على أسلوب الدكتور، وليست أسئلة متوقعة بعينها. <a href="https://t.me/molaksat_aboemad">قناة ملخصات أبو عماد</a></p>
+</div>
+
+<script>
+const TOPICS = {
+  t1: "تحنّثه في غار حراء ونزول الوحي",
+  t2: "فتور الوحي ومراحل الدعوة ومراتبها",
+  t3: "بدء الدعوة والجهر بها",
+  t4: "موقف قريش من الدعوة ومن السابقين",
+  t5: "مواجهة الإيذاء والهجرتان إلى الحبشة",
+  t6: "إسلام عمر وحصار الشعب وعام الحزن والطائف",
+  t7: "الإسراء والمعراج",
+  t8: "عرض النبي ﷺ نفسه على القبائل وبيعتا العقبة"
+};
+
+const TF = [
+  {t:"t1",q:"أول ما نزل من القرآن على النبي ﷺ في غار حراء قوله تعالى: (اقرأ باسم ربك الذي خلق)",a:true,e:"قرأ عليه جبريل بعد الغطّة الثالثة: (اقرأ باسم ربك الذي خلق …)."},
+  {t:"t1",q:"غطّ جبريل عليه السلام النبيَّ ﷺ في غار حراء مرتين",a:false,e:"غطّه ثلاث مرات."},
+  {t:"t1",q:"الغطّ: هو العصر وحبس النفس",a:true,e:"هذا تعريف الغطّ كما في الملخص."},
+  {t:"t1",q:"نزل الوحي على النبي ﷺ في شهر رمضان يوم الجمعة",a:false,e:"نزل في رمضان يوم الاثنين، على قول الجمهور."},
+  {t:"t1",q:"كان عمر النبي ﷺ حين نزل عليه الوحي أربعين سنة",a:true,e:"كان عمره ﷺ أربعين سنة."},
+  {t:"t1",q:"ورقة بن نوفل هو ابن عم خديجة، تنصّر في الجاهلية",a:true,e:"ورقة ابن عم خديجة، تنصّر في الجاهلية وكان يكتب الكتاب العبراني."},
+  {t:"t2",q:"قيل إن مدة فتور الوحي ثلاثون يوماً",a:false,e:"قيل: مدتها أربعون يوماً."},
+  {t:"t2",q:"بعد فتور الوحي نزلت سورة المزمل وفيها الأمر بالدعوة إلى الله",a:false,e:"نزلت سورة المدثر: (يا أيها المدثر • قم فأنذر)."},
+  {t:"t2",q:"استمرت الدعوة سراً ثلاث سنوات",a:true,e:"المرحلة الأولى: الدعوة سراً، واستمرت ثلاث سنوات."},
+  {t:"t2",q:"من مراحل الدعوة: الدعوة جهراً مع قتال المبتدئين بالقتال، وكانت من الهجرة إلى فتح مكة",a:false,e:"كانت من الهجرة إلى صلح الحديبية."},
+  {t:"t2",q:"من مراتب الدعوة: إنذار عشيرته الأقربين",a:true,e:"مراتب الدعوة: النبوة، إنذار عشيرته الأقربين، إنذار قومه، إنذار العرب، إنذار الجن والإنس."},
+  {t:"t3",q:"من منهجه ﷺ في الدعوة السرية: الاصطفاء والاختيار والشمولية",a:true,e:"هذا منهجه ﷺ في الدعوة السرية."},
+  {t:"t3",q:"مولى النبي ﷺ الذي آمن به في أول الدعوة هو بلال بن رباح",a:false,e:"مولاه هو زيد بن حارثة."},
+  {t:"t3",q:"لما صعد النبي ﷺ الصفا وأنذر قومه قال له أبو جهل: تباً لك، ألهذا جمعتنا؟",a:false,e:"القائل أبو لهب، فنزلت سورة المسد."},
+  {t:"t4",q:"وضع عقبة بن أبي معيط سلا الجزور بين كتفي النبي ﷺ وهو ساجد فأزالته فاطمة",a:true,e:"هذا من الإيذاء بالفعل."},
+  {t:"t4",q:"من الأمور التي عارضت بها قريش الدعوة: المجادلة بالباطل في شأن القدر والمسيح والروح",a:true,e:"هذا ثاني الأمور الستة التي عارضت بها قريش الدعوة."},
+  {t:"t4",q:"من أول من أظهر إسلامه: عمار وأمه سمية وصهيب",a:true,e:"أول من أظهر إسلامه سبعة: رسول الله ﷺ وأبو بكر وعمار وسمية وصهيب وبلال والمقداد."},
+  {t:"t4",q:"وافق المعذَّبون المشركين على ما أرادوا إلا عمار بن ياسر",a:false,e:"وافقوهم إلا بلالاً، وكان يقول: أحدٌ أحد."},
+  {t:"t5",q:"نزل قوله تعالى: (إلا من أُكره وقلبه مطمئن بالإيمان) في خباب بن الأرت",a:false,e:"نزلت في عمار بن ياسر لما شكا للنبي ﷺ."},
+  {t:"t5",q:"كانت الهجرة الأولى إلى الحبشة في رجب من السنة الخامسة من البعثة",a:true,e:"زمنها رجب من السنة الخامسة."},
+  {t:"t5",q:"عدد من هاجر الهجرة الثانية إلى الحبشة اثنان وثمانون رجلاً وثماني عشرة امرأة",a:true,e:"82 رجلاً و18 امرأة."},
+  {t:"t5",q:"سبب عودة المهاجرين من الحبشة أنه أُشيع أن قريشاً أسلمت",a:true,e:"أُشيع ذلك لأنهم سجدوا مع النبي ﷺ."},
+  {t:"t5",q:"قصة الغرانيق ثابتة في سبب سجود المشركين مع النبي ﷺ",a:false,e:"قصة الغرانيق لا تثبت، وقد بُيّن ضعفها."},
+  {t:"t5",q:"أرسلت قريش إلى النجاشي وفداً يضم عمرو بن العاص وعبد الله بن أبي ربيعة",a:true,e:"هذا هو الوفد، ومعه هدايا من الأَدَم."},
+  {t:"t5",q:"قرأ جعفر بن أبي طالب على النجاشي صدراً من سورة الكهف",a:false,e:"قرأ صدراً من سورة مريم (كهيعص)."},
+  {t:"t6",q:"أسلم عمر بن الخطاب رضي الله عنه في السنة الخامسة من البعثة",a:false,e:"أسلم في السنة السادسة."},
+  {t:"t6",q:"استمر حصار الشعب ثلاث سنوات من السنة السابعة إلى العاشرة من البعثة",a:true,e:"هذه مدة الحصار."},
+  {t:"t6",q:"حوصر في الشعب المسلمون من بني هاشم وبني المطلب دون كافرهم",a:false,e:"حوصر بنو هاشم وبنو المطلب مسلمهم وكافرهم."},
+  {t:"t6",q:"توفيت خديجة رضي الله عنها بعد وفاة أبي طالب بشهرين، وسُمّي ذلك العام عام الحزن",a:true,e:"هذا ما في الملخص."},
+  {t:"t6",q:"خرج النبي ﷺ إلى الطائف يلتمس النصرة من هوازن",a:false,e:"خرج يلتمس النصرة من ثقيف."},
+  {t:"t7",q:"الإسراء: هو الصعود بالنبي ﷺ من بيت المقدس إلى سدرة المنتهى",a:false,e:"هذا تعريف المعراج. الإسراء: الذهاب بالنبي ﷺ من المسجد الحرام إلى بيت المقدس."},
+  {t:"t7",q:"الراجح أن الإسراء والمعراج كان بالروح فقط",a:false,e:"الراجح، وإليه ذهب الجمهور: أنه بالروح والجسد معاً."},
+  {t:"t7",q:"البراق دابة فوق البغل ودون الحمار",a:false,e:"البراق دون البغل وفوق الحمار."},
+  {t:"t7",q:"فُرضت الصلوات على النبي ﷺ وهو عند سدرة المنتهى",a:true,e:"ومن فوائد ذلك: عظم منزلة الصلاة في الإسلام."},
+  {t:"t7",q:"لم تثبت رؤية النبي ﷺ لربه ليلة المعراج",a:true,e:"قال ﷺ: \"نورٌ أنّى أراه\"."},
+  {t:"t7",q:"سُمّي أبو بكر بالصديق لتصديقه النبي ﷺ في خبر الإسراء",a:true,e:"قال: نعم، إني لأصدّقه فيما هو أبعد من ذلك."},
+  {t:"t8",q:"كانت بيعة العقبة الأولى في السنة الثالثة عشرة من البعثة",a:false,e:"كانت في السنة الثانية عشرة. أما الثالثة عشرة فهي سنة العقبة الثانية."},
+  {t:"t8",q:"بايع في بيعة العقبة الأولى اثنا عشر رجلاً: عشرة من الخزرج واثنان من الأوس",a:true,e:"هذا عددهم كما في الملخص."},
+  {t:"t8",q:"كان عدد من بايع في بيعة العقبة الثانية ثلاثة وسبعين رجلاً وامرأتين",a:true,e:"73 رجلاً وامرأتان، في أوسط أيام التشريق."}
+];
+
+const LIST = [
+  {t:"t1",q:"هيّأ الله تعالى نبيه ﷺ للنبوة قبل نزول الوحي بأمور، اذكر اثنين منها؟",a:["حراسة السماء بالشهب","رؤيته للضوء وسماعه للصوت وتسليم الحجر عليه","الرؤيا الصادقة","تحنّثه في غار حراء"]},
+  {t:"t1",q:"ذكرت خديجة رضي الله عنها للنبي ﷺ خمس خصال حين قالت: كلا والله لا يخزيك الله أبداً، اذكر اثنين منها؟",a:["تصل الرحم","تحمل الكَلّ","تكسب المعدوم","تقري الضيف","تعين على نوائب الحق"]},
+  {t:"t2",q:"اذكر اثنين من مراحل الدعوة؟",a:["الدعوة سراً","الدعوة جهراً مع الكفّ عن القتال","الدعوة جهراً مع قتال المبتدئين بالقتال","الدعوة جهراً مع قتال كل من يقف في سبيل الدعوة"]},
+  {t:"t2",q:"اذكر اثنين من مراتب الدعوة؟",a:["النبوة","إنذار عشيرته الأقربين","إنذار قومه","إنذار العرب قاطبة","إنذار جميع من بلغته الدعوة من الجن والإنس"]},
+  {t:"t3",q:"اذكر اثنين ممن صدّق النبي ﷺ وآمن به في أول الدعوة؟",a:["خديجة بنت خويلد","أبو بكر الصديق","علي بن أبي طالب","زيد بن حارثة","بلال بن رباح"]},
+  {t:"t3",q:"اذكر اثنين من فوائد الجهر بالدعوة؟",a:["البدء بدعوة القرابة","الولاء والبراء راجعان إلى الإيمان والتوحيد","اختيار الزمان والمكان المناسبين للدعوة","انتزاع شهادتهم له بالصدق قبل إخبارهم ببعثته"]},
+  {t:"t4",q:"اذكر اثنين من الأمور التي عارضت بها قريش دعوة النبي ﷺ؟",a:["طلب الآيات تعجيزاً","المجادلة بالباطل","الاستهزاء","الإغراء بالمال والمنصب والجاه","المداهنة والمساومة","مجيئهم إلى عمه أبي طالب"]},
+  {t:"t4",q:"اذكر اثنين ممن أظهر إسلامه أول الإسلام؟",a:["رسول الله ﷺ","أبو بكر","عمار","سمية","صهيب","بلال","المقداد"]},
+  {t:"t5",q:"اذكر اثنين من الوسائل التي واجه بها المسلمون الإيذاء؟",a:["الصبر والاحتساب واليقين","تسلية النبي ﷺ لهم","مواساة بعضهم بعضاً والتكافل الاجتماعي","الهجرة إلى الحبشة"]},
+  {t:"t5",q:"سجد المشركون مع النبي ﷺ في سورة النجم ولم يكن ذلك إسلاماً، اذكر سببين لسجودهم؟",a:["ظنوا أن الله مدح آلهتهم","سجدوا خوفاً من أن يحل بهم ما حل بعاد وثمود"]},
+  {t:"t5",q:"اذكر اثنين مما نهى عنه النبي ﷺ كما ذكر جعفر للنجاشي؟",a:["الفواحش","قول الزور","أكل مال اليتيم","قذف المحصنات"]},
+  {t:"t5",q:"اذكر اثنين من فوائد الهجرة إلى الحبشة؟",a:["مشروعية الهجرة من بلد الكفر الذي يتعذر فيه إقامة الشعائر","جواز الدخول في حماية الكافر عند الاضطرار","أهل الكتاب أقرب فهماً للإسلام، والنصارى أقرب مودة","أعداء الإسلام دائمو اليقظة والتخطيط"]},
+  {t:"t7",q:"اذكر اثنين من الأدلة على أن الإسراء والمعراج كان بالروح والجسد؟",a:["قوله تعالى (بعبده)، والعبد لا يُطلق إلا على الروح والجسد","التسبيح لا يكون إلا لأمر عظيم","لو كان بالروح فقط أو مناماً لما كذّبت قريش"]},
+  {t:"t7",q:"اذكر اثنين من فوائد الإسراء والمعراج؟",a:["عظم منزلة الصلاة","فضل النبي ﷺ على غيره من الأنبياء","موقف أبي بكر قدوة في الإيمان الصادق الجازم","تسلية من الله لنبيه ﷺ"]},
+  {t:"t8",q:"اذكر اثنين من بنود بيعة العقبة الأولى؟",a:["ألّا يشركوا بالله شيئاً","ولا يسرقوا","ولا يزنوا","ولا يقتلوا أولادهم","ولا يأتوا ببهتان","ولا يعصوه في معروف"]},
+  {t:"t8",q:"اذكر اثنين من بنود بيعة العقبة الثانية؟",a:["السمع والطاعة في النشاط والكسل","النفقة في العسر واليسر","الأمر بالمعروف والنهي عن المنكر","أن يقولوا في الله لا يخافون لومة لائم","أن ينصروه فيمنعوه إذا قدم إليهم"]}
+];
+
+const MCQ = [
+  {t:"t1",q:"ورقة بن نوفل هو ابن عم؟",o:["خديجة","أبي طالب","أبي بكر"],a:0,e:"ورقة ابن عم خديجة رضي الله عنها."},
+  {t:"t1",q:"قال ورقة بن نوفل: هذا الناموس الذي نزل على؟",o:["عيسى","موسى","إبراهيم"],a:1,e:"قال: هذا الناموس الذي نزل على موسى."},
+  {t:"t1",q:"نزل الوحي على النبي ﷺ في شهر؟",o:["رجب","شوال","رمضان"],a:2,e:"نزل الوحي في شهر رمضان."},
+  {t:"t2",q:"بعد فتور الوحي نزلت سورة؟",o:["العلق","المدثر","المسد"],a:1,e:"نزلت سورة المدثر، وفيها الأمر بالدعوة."},
+  {t:"t2",q:"استمرت الدعوة سراً مدة؟",o:["ثلاث سنوات","خمس سنوات","أربعين يوماً"],a:0,e:"الدعوة سراً استمرت ثلاث سنوات."},
+  {t:"t2",q:"من مراحل الدعوة؟",o:["إنذار عشيرته الأقربين","الدعوة جهراً مع الكفّ عن القتال","الاصطفاء والاختيار"],a:1,e:"إنذار العشيرة من مراتب الدعوة، والاصطفاء من منهج الدعوة السرية."},
+  {t:"t2",q:"من مراتب الدعوة؟",o:["إنذار قومه","الدعوة سراً","الشمولية"],a:0,e:"الدعوة سراً من مراحل الدعوة، والشمولية من منهج الدعوة السرية."},
+  {t:"t3",q:"من منهجه ﷺ في الدعوة السرية؟",o:["الشمولية","قتال المبتدئين بالقتال","إنذار قومه"],a:0,e:"منهجه في الدعوة السرية: الاصطفاء والاختيار، والشمولية."},
+  {t:"t3",q:"مولى النبي ﷺ الذي كان من أول من آمن به؟",o:["زيد بن حارثة","بلال بن رباح","عمار بن ياسر"],a:0,e:"مولاه زيد بن حارثة."},
+  {t:"t3",q:"لما نزل قوله تعالى (وأنذر عشيرتك الأقربين) صعد النبي ﷺ جبل؟",o:["الصفا","حراء","المروة"],a:0,e:"صعد الصفا وهتف: يا صباحاه."},
+  {t:"t3",q:"نزلت سورة المسد في؟",o:["أبي جهل","أبي لهب","عقبة بن أبي معيط"],a:1,e:"نزلت في أبي لهب لما قال: تباً لك ألهذا جمعتنا."},
+  {t:"t3",q:"من فوائد الجهر بالدعوة؟",o:["مشروعية الهجرة من بلد الكفر","عظم منزلة الصلاة","البدء بدعوة القرابة"],a:2,e:"الأولى من فوائد الهجرة إلى الحبشة، والثانية من فوائد الإسراء والمعراج."},
+  {t:"t4",q:"الذي وضع سلا الجزور بين كتفي النبي ﷺ وهو ساجد؟",o:["أبو لهب","العاص بن وائل","عقبة بن أبي معيط"],a:2,e:"عقبة بن أبي معيط، فأزالته فاطمة."},
+  {t:"t4",q:"قولهم للنبي ﷺ: نعبد إلهك سنة وتعبد آلهتنا سنة، من؟",o:["الإغراء بالمال","المداهنة والمساومة","طلب الآيات تعجيزاً"],a:1,e:"فنزل قوله تعالى: (ودّوا لو تدهن فيدهنون)."},
+  {t:"t4",q:"قصة عتبة بن ربيعة مثال على؟",o:["الإغراء بالمال والمنصب والجاه","الاستهزاء","المجادلة بالباطل"],a:0,e:"قصة عتبة مثال على الإغراء بالمال والمنصب والجاه."},
+  {t:"t4",q:"لم يوافق المشركين على ما أرادوا من المعذَّبين إلا؟",o:["عمار","صهيب","بلال"],a:2,e:"إلا بلالاً، هانت عليه نفسه في الله."},
+  {t:"t4",q:"الذي كان يقول وهو يُعذَّب: أحدٌ أحد؟",o:["بلال","عمار","صهيب"],a:0,e:"بلال رضي الله عنه."},
+  {t:"t4",q:"قال العاص بن وائل: والله لا أعطيك حتى تكفر بمحمد، وكان يخاطب؟",o:["خباب بن الأرت","عمار بن ياسر","بلال بن رباح"],a:0,e:"خباب عمل حداداً عند العاص بن وائل."},
+  {t:"t5",q:"كان أبو بكر يشتري الرقيق المعذَّبين ويعتقهم، فنزل فيه قوله تعالى؟",o:["(فأما من أعطى واتقى)","(إلا من أُكره)","(ودّوا لو تدهن)"],a:0,e:"(فأما من أعطى واتقى • وصدّق بالحسنى) إلى قوله: (ولسوف يرضى)."},
+  {t:"t5",q:"هاجر المسلمون إلى بلد فيه ملك لا يُظلم عنده أحد، وهو؟",o:["الطائف","الحبشة","الشام"],a:1,e:"الحبشة."},
+  {t:"t5",q:"كانت الهجرة الأولى إلى الحبشة في شهر؟",o:["رجب","شوال","رمضان"],a:0,e:"في رجب من السنة الخامسة."},
+  {t:"t5",q:"عاد المهاجرون من الحبشة في الهجرة الأولى في شهر؟",o:["رجب","شوال","رمضان"],a:1,e:"عادوا في شوال من السنة الخامسة."},
+  {t:"t5",q:"سجد المشركون مع النبي ﷺ حين قرأ سورة؟",o:["النجم","مريم","المدثر"],a:0,e:"سورة النجم."},
+  {t:"t5",q:"قرأ جعفر بن أبي طالب على النجاشي صدراً من سورة؟",o:["النجم","مريم","المدثر"],a:1,e:"سورة مريم (كهيعص)."},
+  {t:"t5",q:"من أعضاء الوفد الذي أرسلته قريش إلى النجاشي؟",o:["عمرو بن العاص","العاص بن وائل","عقبة بن أبي معيط"],a:0,e:"عمرو بن العاص وعبد الله بن أبي ربيعة."},
+  {t:"t5",q:"كانت الهجرة الأولى إلى الحبشة في السنة ... من البعثة؟",o:["الخامسة","السادسة","السابعة"],a:0,e:"في السنة الخامسة."},
+  {t:"t5",q:"من فوائد الهجرة إلى الحبشة؟",o:["مشروعية الهجرة من بلد الكفر","عظم منزلة الصلاة","البدء بدعوة القرابة"],a:0,e:"الثانية من فوائد الإسراء، والثالثة من فوائد الجهر بالدعوة."},
+  {t:"t6",q:"أسلم عمر بن الخطاب رضي الله عنه في السنة ... من البعثة؟",o:["الخامسة","السادسة","السابعة"],a:1,e:"في السنة السادسة."},
+  {t:"t6",q:"بدأ حصار الشعب في السنة ... من البعثة؟",o:["الخامسة","السادسة","السابعة"],a:2,e:"من السابعة إلى العاشرة."},
+  {t:"t6",q:"ثبت أن آخر ما قاله أبو طالب عند موته؟",o:["لا إله إلا الله","على ملة عبد المطلب","أحدٌ أحد"],a:1,e:"قال: على ملة عبد المطلب، ومات على الشرك."},
+  {t:"t6",q:"بعد وفاة أبي طالب بشهرين توفيت؟",o:["خديجة","سمية","فاطمة"],a:0,e:"خديجة رضي الله عنها، وسُمّي العام عام الحزن."},
+  {t:"t6",q:"خرج النبي ﷺ إلى الطائف يلتمس النصرة من قبيلة؟",o:["قريش","ثقيف","الخزرج"],a:1,e:"ثقيف."},
+  {t:"t7",q:"الإسراء هو الذهاب بالنبي ﷺ من المسجد الحرام إلى؟",o:["بيت المقدس","سدرة المنتهى","السماء الدنيا"],a:0,e:"الإسراء ينتهي عند بيت المقدس، والمعراج إلى سدرة المنتهى."},
+  {t:"t7",q:"التقى النبي ﷺ ليلة المعراج بإبراهيم عليه السلام في السماء؟",o:["الدنيا","الرابعة","السابعة"],a:2,e:"في السماء السابعة."},
+  {t:"t7",q:"فُرضت على النبي ﷺ ليلة المعراج خمسون صلاة فخُففت إلى؟",o:["خمس","سبع","عشر"],a:0,e:"خُففت إلى خمس."},
+  {t:"t7",q:"اختار النبي ﷺ ليلة الإسراء إناء؟",o:["الخمر","اللبن","الماء"],a:1,e:"اختار اللبن، فقال جبريل: اخترت الفطرة."},
+  {t:"t7",q:"سُمّي أبو بكر بالصديق لتصديقه النبي ﷺ في؟",o:["خبر الإسراء","نزول الوحي","الجهر بالدعوة"],a:0,e:"صدّقه في خبر الإسراء."},
+  {t:"t7",q:"من فوائد الإسراء والمعراج؟",o:["مشروعية الهجرة من بلد الكفر","عظم منزلة الصلاة","البدء بدعوة القرابة"],a:1,e:"فُرضت الصلاة عليه ﷺ وهو عند سدرة المنتهى."},
+  {t:"t8",q:"بايع في بيعة العقبة الأولى عشرة من؟",o:["الأوس","الخزرج","ثقيف"],a:1,e:"عشرة من الخزرج واثنان من الأوس."},
+  {t:"t8",q:"كانت بيعة العقبة الأولى على وفق؟",o:["بيعة النساء","بيعة العقبة الثانية","بيعة الحرب"],a:0,e:"على وفق بيعة النساء."},
+  {t:"t8",q:"كانت بيعة العقبة الثانية في؟",o:["أوسط أيام التشريق","شهر رمضان","شهر رجب"],a:0,e:"في أوسط أيام التشريق، السنة الثالثة عشرة."}
+];
+
+const AR=['أ','ب','ج'];
+let mode='model', state=null, timerId=null;
+const $=s=>document.querySelector(s);
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const num=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+
+const topicSel=$('#topic');
+for(const [k,v] of Object.entries(TOPICS)){const o=document.createElement('option');o.value=k;o.textContent=v;topicSel.appendChild(o)}
+document.querySelectorAll('.mode').forEach(b=>b.addEventListener('click',()=>{
+  mode=b.dataset.mode;document.querySelectorAll('.mode').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  topicSel.classList.toggle('hide',mode!=='topic');
+}));
+try{const s=localStorage.getItem('aboemad-sira-mins');if(s)$('#mins').value=s}catch(e){}
+
+// spread picks over topics: prefer different topics before repeating
+function pickSpread(pool,n){
+  const by={};shuffle(pool).forEach(q=>(by[q.t]=by[q.t]||[]).push(q));
+  const keys=shuffle(Object.keys(by));const out=[];
+  while(out.length<n&&keys.some(k=>by[k].length)){for(const k of keys){if(by[k].length&&out.length<n)out.push(by[k].shift())}}
+  return out;
+}
+function build(){
+  if(mode==='model'){
+    // ensure the T/F section has a mix of true and false like the doctor's paper
+    let tf;do{tf=pickSpread(TF,7)}while(tf.filter(x=>x.a).length<2||tf.filter(x=>!x.a).length<2);
+    return {tf, ls:pickSpread(LIST,3), mc:pickSpread(MCQ,7), full:true};
+  }
+  const f=q=>mode==='all'||q.t===topicSel.value;
+  return {tf:shuffle(TF.filter(f)), ls:LIST.filter(f), mc:shuffle(MCQ.filter(f)), full:false};
+}
+
+function render(){
+  const s=state,ex=$('#exam');
+  const total=s.tf.length+s.ls.length*2+s.mc.length;
+  let h=`<div class="sheet"><div class="sheethead"><h1>${mode==='model'?'الاختبار المحاكي لمقرر السيرة النبوية':mode==='topic'?esc(TOPICS[topicSel.value]):'بنك الأسئلة كاملاً'}</h1><span>الدرجة: <b>${num(total)}</b> <span class="timer" id="timer"></span></span></div>`;
+  if(s.tf.length){h+=`<h2 class="qh">السؤال الأول: ضع علامة (✓) أمام العبارة الصحيحة وعلامة (✗) أمام العبارة الخاطئة:</h2>`;
+    s.tf.forEach((q,i)=>{h+=`<div class="item" id="tf${i}"><span class="n">${num(i+1)}.</span><div>${esc(q.q)}<span class="chip">متوقع</span></div><div class="tf" role="group" aria-label="إجابة العبارة ${i+1}"><button data-k="tf" data-i="${i}" data-v="1" aria-pressed="false">✓</button><button data-k="tf" data-i="${i}" data-v="0" aria-pressed="false">✗</button></div></div>`})}
+  if(s.ls.length){h+=`<h2 class="qh">السؤال الثاني: أجب عن الأسئلة التالية:</h2>`;
+    s.ls.forEach((q,i)=>{h+=`<div class="item" id="ls${i}"><span class="n">${num(i+1)}.</span><div>${esc(q.q)}<span class="chip">متوقع</span></div><div class="lst"><label for="ls${i}a">أ-<input id="ls${i}a" autocomplete="off"></label><label for="ls${i}b">ب-<input id="ls${i}b" autocomplete="off"></label></div></div>`})}
+  if(s.mc.length){h+=`<h2 class="qh">السؤال الثالث: ضع دائرة حول حرف الإجابة الصحيحة:</h2>`;
+    s.mc.forEach((q,i)=>{h+=`<div class="item" id="mc${i}"><span class="n">${num(i+1)}.</span><div>${esc(q.q)}<span class="chip">متوقع</span></div><div class="opts" role="group" aria-label="خيارات السؤال ${i+1}">${q.o.map((o,j)=>`<button class="opt" data-k="mc" data-i="${i}" data-v="${j}" aria-pressed="false"><span class="l">${AR[j]}-</span>${esc(o)}</button>`).join('')}</div></div>`})}
+  h+=`<div class="actions"><button class="btn" id="submit">تسليم الورقة</button><button class="btn ghost" id="back">رجوع</button></div></div>`;
+  ex.innerHTML=h;ex.classList.remove('hide');$('#setup').classList.add('hide');
+  ex.querySelectorAll('[data-k]').forEach(b=>b.addEventListener('click',()=>{
+    if(s.done)return;const k=b.dataset.k,i=+b.dataset.i,v=+b.dataset.v;
+    s.ans[k][i]=v;b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  }));
+  $('#submit').addEventListener('click',grade);
+  $('#back').addEventListener('click',reset);
+  startTimer();window.scrollTo({top:0});
+}
+
+function startTimer(){
+  clearInterval(timerId);const m=+$('#mins').value;try{localStorage.setItem('aboemad-sira-mins',m)}catch(e){}
+  if(!m)return;let left=m*60;const el=$('#timer');
+  const tick=()=>{const mm=Math.floor(left/60),ss=left%60;el.textContent=' · الوقت المتبقي '+num(mm)+':'+num(String(ss).padStart(2,'0'));el.classList.toggle('low',left<=300);
+    if(left<=0){clearInterval(timerId);if(!state.done)grade(true)}left--};
+  tick();timerId=setInterval(tick,1000);
+}
+
+function grade(auto){
+  const s=state;if(s.done)return;s.done=true;clearInterval(timerId);
+  if(auto===true)$('#timer').textContent=' · انتهى الوقت';
+  s.tf.forEach((q,i)=>{const v=s.ans.tf[i],ok=v!==undefined&&!!v===q.a;s.pts.tf[i]=ok?1:0;const box=$('#tf'+i);
+    box.querySelectorAll('.tf button').forEach(b=>{if(!!+b.dataset.v===q.a)b.classList.add('right');else if(+b.dataset.v===v)b.classList.add('wrong')});
+    box.insertAdjacentHTML('beforeend',`<div class="mark ${ok?'ok':'no'}"><b class="${ok?'ok':'no'}">${ok?'صحيح':v===undefined?'لم تُجب':'خطأ'}</b> · العبارة ${q.a?'صحيحة ✓':'خاطئة ✗'}. ${esc(q.e)}</div>`)});
+  s.mc.forEach((q,i)=>{const v=s.ans.mc[i],ok=v===q.a;s.pts.mc[i]=ok?1:0;const box=$('#mc'+i);
+    box.querySelectorAll('.opt').forEach(b=>{if(+b.dataset.v===q.a)b.classList.add('right');else if(+b.dataset.v===v)b.classList.add('wrong')});
+    box.insertAdjacentHTML('beforeend',`<div class="mark ${ok?'ok':'no'}"><b class="${ok?'ok':'no'}">${ok?'صحيح':v===undefined?'لم تُجب':'خطأ'}</b> · الإجابة: ${AR[q.a]}- ${esc(q.o[q.a])}. ${esc(q.e)}</div>`)});
+  s.ls.forEach((q,i)=>{const box=$('#ls'+i);box.querySelectorAll('input').forEach(x=>x.readOnly=true);s.pts.ls[i]=null;
+    box.insertAdjacentHTML('beforeend',`<div class="mark part">يكفي ذكر اثنين مما يلي: <b>${q.a.map(esc).join('، ')}</b>.<div class="sg" role="group" aria-label="قيّم إجابتك"><span>قيّم إجابتك:</span><button data-i="${i}" data-p="2" aria-pressed="false">صح (٢)</button><button data-i="${i}" data-p="1" aria-pressed="false">جزئي (١)</button><button data-i="${i}" data-p="0" aria-pressed="false">خطأ (٠)</button></div></div>`)});
+  document.querySelectorAll('.sg button').forEach(b=>b.addEventListener('click',()=>{s.pts.ls[+b.dataset.i]=+b.dataset.p;b.parentElement.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));summary()}));
+  $('#submit').remove();
+  summary();
+}
+
+function summary(){
+  const s=state;const total=s.tf.length+s.ls.length*2+s.mc.length;
+  const sum=a=>a.reduce((x,y)=>x+(y||0),0);
+  const got=sum(s.pts.tf)+sum(s.pts.mc)+sum(s.pts.ls);
+  const pending=s.pts.ls.filter(x=>x===null).length;
+  const per={};const add=(q,p,m)=>{per[q.t]=per[q.t]||[0,0];per[q.t][0]+=p||0;per[q.t][1]+=m};
+  s.tf.forEach((q,i)=>add(q,s.pts.tf[i],1));s.mc.forEach((q,i)=>add(q,s.pts.mc[i],1));s.ls.forEach((q,i)=>add(q,s.pts.ls[i],2));
+  const bars=Object.entries(per).map(([k,[g,m]])=>`<div class="bar"><span>${esc(TOPICS[k])}</span><b>${num(g)} / ${num(m)}</b><div class="track"><i style="width:${m?g/m*100:0}%"></i></div></div>`).join('');
+  let el=$('#result');
+  const h=`<div class="score"><div class="ring">${num(got)}/${num(total)}</div><div class="bars">${bars}</div></div>${pending?`<p class="note">قيّم إجاباتك في السؤال الثاني (${num(pending)}) لتكتمل الدرجة.</p>`:''}<div class="actions"><button class="btn" id="again">${state.full?'نموذج جديد':'إعادة الاختبار'}</button><button class="btn ghost" id="home">تغيير نوع الاختبار</button></div>`;
+  if(!el){el=document.createElement('div');el.id='result';el.className='panel';el.style.marginTop='14px';$('#exam').prepend(el);window.scrollTo({top:0})}
+  el.innerHTML=h;
+  $('#again').addEventListener('click',()=>newExam());$('#home').addEventListener('click',reset);
+}
+
+function newExam(){const b=build();state={...b,ans:{tf:[],mc:[]},pts:{tf:[],mc:[],ls:[]},done:false};render()}
+function reset(){clearInterval(timerId);state=null;$('#exam').classList.add('hide');$('#exam').innerHTML='';$('#setup').classList.remove('hide')}
+$('#start').addEventListener('click',newExam);
+</script>
+</body>
+</html>
